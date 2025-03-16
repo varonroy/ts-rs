@@ -36,6 +36,7 @@ serde-json-impl = ["serde_json"]
 no-serde-warnings = ["ts-rs-macros/no-serde-warnings"]
 import-esm = []
 tokio-impl = ["tokio"]
+bitcoin-impl = ["bitcoin"]
 
 [dev-dependencies]
 serde = { version = "1.0", features = ["derive"] }
@@ -61,3 +62,4 @@ indexmap = { version = "2", optional = true }
 ordered-float = { version = ">= 3, < 5", optional = true }
 serde_json = { version = "1", optional = true }
 tokio = { version = "1", features = ["sync"], optional = true }
+bitcoin = { version = "0.32.5", optional = true }
