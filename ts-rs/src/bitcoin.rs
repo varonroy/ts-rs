@@ -124,18 +124,8 @@ mod blockdata {
         impl_primitives! { Version => "number" }
         impl_primitives! { Sequence => "number" }
 
-        #[derive(TS)]
-        #[ts(
-            crate = "crate",
-            rename = "OutPoint",
-            export_to = "bitcoin/blockdata/transaction/"
-        )]
-        pub struct TsOutPoint {
-            txid: Txid,
-            vout: u32,
-        }
-
-        impl_shadow!(as TsOutPoint: impl TS for OutPoint);
+        // The `bitcoin` crate serializes `OutPoint` as a string (`txid:vout`).
+        impl_primitives! { OutPoint => "string" }
 
         #[derive(TS)]
         #[ts(
