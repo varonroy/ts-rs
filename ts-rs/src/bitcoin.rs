@@ -1,8 +1,8 @@
 use super::{impl_primitives, impl_shadow, TS};
 
 use bitcoin::{
-    ecdsa::Signature, Address, Amount, CompactTarget, CompressedPublicKey, PrivateKey, PubkeyHash,
-    PublicKey, ScriptBuf, WPubkeyHash,
+    Address, Amount, CompactTarget, CompressedPublicKey, PrivateKey, PubkeyHash, PublicKey,
+    ScriptBuf, WPubkeyHash,
 };
 
 impl_primitives! { Address => "string" }
@@ -13,9 +13,74 @@ impl_primitives! { PrivateKey => "string" }
 impl_primitives! { CompressedPublicKey => "string" }
 impl_primitives! { PubkeyHash => "string" }
 impl_primitives! { WPubkeyHash => "string" }
-impl_primitives! { Signature => "string" }
 
 impl_shadow!(as Vec<u8>: impl TS for ScriptBuf);
+
+mod secp256k1 {
+    use super::TS;
+    use super::{impl_primitives, impl_shadow};
+
+    mod ffi {
+        use super::impl_primitives;
+        use super::TS;
+        use bitcoin::secp256k1::ffi::Signature;
+
+        impl_primitives! { Signature => "string" }
+
+        mod recovery {
+            use super::impl_primitives;
+            use super::TS;
+            use bitcoin::secp256k1::ffi::recovery::RecoverableSignature;
+
+            impl_primitives! { RecoverableSignature => "string" }
+        }
+    }
+
+    mod ecdsa {
+        use super::impl_shadow;
+        use super::TS;
+
+        use bitcoin::secp256k1::ecdsa::{RecoverableSignature, RecoveryId, Signature};
+
+        #[derive(TS)]
+        #[ts(
+            crate = "crate",
+            rename = "Signature",
+            export_to = "bitcoin/secp256k1/ecdsa"
+        )]
+        pub struct TsSignature(pub String);
+
+        impl_shadow!(as TsSignature: impl TS for Signature);
+
+        #[derive(TS)]
+        #[ts(
+            crate = "crate",
+            rename = "RecoverableSignature",
+            export_to = "bitcoin/secp256k1/ecdsa"
+        )]
+        pub struct TsRecoverableSignature(pub String);
+
+        impl_shadow!(as TsRecoverableSignature: impl TS for RecoverableSignature);
+
+        #[derive(TS)]
+        #[ts(
+            crate = "crate",
+            rename = "RecoveryId",
+            export_to = "bitcoin/secp256k1/ecdsa"
+        )]
+        pub struct TsRecoveryId(pub i32);
+
+        impl_shadow!(as TsRecoveryId: impl TS for RecoveryId);
+    }
+}
+
+mod ecdsa {
+    use super::impl_primitives;
+    use super::TS;
+    use bitcoin::ecdsa::Signature;
+
+    impl_primitives! { Signature => "string" }
+}
 
 mod network {
     use super::impl_shadow;
