@@ -16,6 +16,36 @@ impl_primitives! { WPubkeyHash=> "string" }
 
 impl_shadow!(as Vec<u8>: impl TS for ScriptBuf);
 
+mod network {
+    use super::impl_shadow;
+    use super::TS;
+    use bitcoin::network::{Network, NetworkKind};
+
+    #[derive(TS)]
+    #[ts(
+        crate = "crate",
+        rename = "NetworkKind",
+        export_to = "bitcoin/network/"
+    )]
+    pub enum TsNetworkKind {
+        Main,
+        Test,
+    }
+
+    #[derive(TS)]
+    #[ts(crate = "crate", rename = "Network", export_to = "bitcoin/network/")]
+    pub enum TsNetwork {
+        Bitcoin,
+        Testnet,
+        Testnet4,
+        Signet,
+        Regtest,
+    }
+
+    impl_shadow!(as TsNetwork: impl TS for Network);
+    impl_shadow!(as TsNetworkKind: impl TS for NetworkKind);
+}
+
 mod hashes {
     use super::impl_primitives;
     use super::TS;
@@ -89,12 +119,12 @@ mod blockdata {
             export_to = "bitcoin/blockdata/block/"
         )]
         pub struct TsHeader {
-            version: Version,
-            prev_blockhash: BlockHash,
-            merkle_root: TxMerkleNode,
-            time: u32,
-            bits: CompactTarget,
-            nonce: u32,
+            pub version: Version,
+            pub prev_blockhash: BlockHash,
+            pub merkle_root: TxMerkleNode,
+            pub time: u32,
+            pub bits: CompactTarget,
+            pub nonce: u32,
         }
 
         impl_shadow!(as TsHeader: impl TS for Header);
@@ -106,8 +136,8 @@ mod blockdata {
             export_to = "bitcoin/blockdata/block/"
         )]
         pub struct TsBlock {
-            header: Header,
-            txdata: Vec<bitcoin::blockdata::transaction::Transaction>,
+            pub header: Header,
+            pub txdata: Vec<bitcoin::blockdata::transaction::Transaction>,
         }
 
         impl_shadow!(as TsBlock: impl TS for Block);
@@ -149,10 +179,10 @@ mod blockdata {
             export_to = "bitcoin/blockdata/transaction/"
         )]
         pub struct TsTxIn {
-            previous_output: OutPoint,
-            script_sig: ScriptBuf,
-            sequence: Sequence,
-            witness: Witness,
+            pub previous_output: OutPoint,
+            pub script_sig: ScriptBuf,
+            pub sequence: Sequence,
+            pub witness: Witness,
         }
 
         impl_shadow!(as TsTxIn: impl TS for TxIn);
@@ -184,9 +214,9 @@ mod blockdata {
             export_to = "bitcoin/blockdata/witness/"
         )]
         pub struct TsWitness {
-            content: Vec<u8>,
-            witness_elements: usize,
-            indices_start: usize,
+            pub content: Vec<u8>,
+            pub witness_elements: usize,
+            pub indices_start: usize,
         }
 
         impl_shadow!(as TsWitness: impl TS for Witness);
