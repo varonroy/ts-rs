@@ -1,8 +1,8 @@
 use super::{impl_primitives, impl_shadow, TS};
 
 use bitcoin::{
-    Address, Amount, CompactTarget, CompressedPublicKey, PrivateKey, PubkeyHash, PublicKey,
-    ScriptBuf, WPubkeyHash,
+    ecdsa::Signature, Address, Amount, CompactTarget, CompressedPublicKey, PrivateKey, PubkeyHash,
+    PublicKey, ScriptBuf, WPubkeyHash,
 };
 
 impl_primitives! { Address => "string" }
@@ -12,7 +12,8 @@ impl_primitives! { PublicKey => "string" }
 impl_primitives! { PrivateKey => "string" }
 impl_primitives! { CompressedPublicKey => "string" }
 impl_primitives! { PubkeyHash => "string" }
-impl_primitives! { WPubkeyHash=> "string" }
+impl_primitives! { WPubkeyHash => "string" }
+impl_primitives! { Signature => "string" }
 
 impl_shadow!(as Vec<u8>: impl TS for ScriptBuf);
 
